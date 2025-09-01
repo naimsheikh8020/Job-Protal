@@ -1,9 +1,17 @@
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Applyjob from "./pages/Applyjob";
+import Application from "./pages/Application";
 
 function App() {
 
   return (
     <>
-      <h1 class="text-3xl font-bold underline">Job Protal!</h1>
+      <Routes>
+        <Route path="/" element={<Home/>} />
+        <Route path="/apply-job/:id" element={<Applyjob/>} />
+        <Route path="/applications" element={<Application/>} />
+      </Routes>
     </>
   );
 }
