@@ -1,6 +1,7 @@
 import { createContext } from "react";
 
 // Create context
+// eslint-disable-next-line react-refresh/only-export-components
 export const AppContext = createContext();
 
 // Context provider
