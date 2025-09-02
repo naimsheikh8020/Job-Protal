@@ -33,7 +33,7 @@ const Hero = () => {
             <input
               type="text"
               placeholder="Search For Job"
-              className="max-sm:text-xs p-2 rounded outline-none w-full"
+              className="max-sm:text-xs p-2 rounded outline-none w-full "
               ref={titleRef}
             />
           </div>
