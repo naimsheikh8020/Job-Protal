@@ -2,10 +2,13 @@ import React, { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { assets, JobCategories, JobLocations } from "../assets/assets";
 import JobCard from "./JobCard";
+import { Link } from "react-router-dom";
 
 const JobListing = () => {
-  const { isSearched, searchFilter, setSearchFilter, jobs } = useContext(AppContext);
-  const [showFilter, setShowFilter] = useState(false)
+  const { isSearched, searchFilter, setSearchFilter, jobs } =
+    useContext(AppContext);
+  const [showFilter, setShowFilter] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   return (
     <div className="container 2xl:px-20 mx-auto flex flex-col lg:flex-row gap-8 py-8">
       {/* Sidebar */}
@@ -46,9 +49,12 @@ const JobListing = () => {
             </>
           )}
 
-          <button onClick={() => setShowFilter(prev => !prev)} className="px-6 py-1.5 rounded border border-gray-400 lg:hidden">
-            {showFilter ?  "Close" : "Filters"}
-          </button>
+        <button
+          onClick={() => setShowFilter((prev) => !prev)}
+          className="px-6 py-1.5 rounded border border-gray-400 lg:hidden"
+        >
+          {showFilter ? "Close" : "Filters"}
+        </button>
 
         {/* Category Filter */}
         <div className={showFilter ? "" : "max-lg:hidden"}>
@@ -85,12 +91,63 @@ const JobListing = () => {
         <p className="mb-8">Get your desired job from top companies</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {/* Job cards go here */}
-          {
-            jobs.map((job, index)=>(
-              <JobCard key={index} job={job}/>
-            ))
-          }
+          {jobs
+            .slice((currentPage - 1) * 6, currentPage * 6)
+            .map((job, index) => (
+              <JobCard key={index} job={job} />
+            ))}
         </div>
+
+        {/* Pagination */}
+
+        {jobs.length > 0 && (
+          <div className="flex items-center justify-center gap-2 mt-10">
+            {/* Previous Arrow */}
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className={`p-1 rounded ${
+                currentPage === 1 ? "opacity-40 cursor-not-allowed" : ""
+              }`}
+            >
+              <img src={assets.left_arrow_icon} alt="Previous Page" />
+            </button>
+
+            {/* Page Numbers */}
+            {Array.from({ length: Math.ceil(jobs.length / 6) }).map(
+              (_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentPage(index + 1)}
+                  className={`px-3 py-1 border rounded min-w-[40px] cursor-pointer ${
+                    currentPage === index + 1
+                      ? "bg-blue-600 text-white"
+                      : "bg-white text-gray-700"
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              )
+            )}
+
+            {/* Next Arrow */}
+            <button
+              onClick={() =>
+                setCurrentPage((prev) =>
+                  Math.min(prev + 1, Math.ceil(jobs.length / 6))
+                )
+              }
+              disabled={currentPage === Math.ceil(jobs.length / 6)}
+              className={`p-1 rounded ${
+                currentPage === Math.ceil(jobs.length / 6)
+                  ? "opacity-40 cursor-not-allowed"
+                  : ""
+              }`}
+            >
+              <img src={assets.right_arrow_icon} alt="Next Page" />
+            </button>
+          </div>
+        )}
       </section>
     </div>
   );
