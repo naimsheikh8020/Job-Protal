@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { assets, JobCategories, JobLocations } from "../assets/assets";
 import JobCard from "./JobCard";
@@ -9,6 +9,62 @@ const JobListing = () => {
     useContext(AppContext);
   const [showFilter, setShowFilter] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectdCategories, setSelectedCategories] = useState([]);
+  const [selectedLocations, setselectedLocations] = useState([]);
+  const [filteredJobs, seFilteredJobs] = useState([]);
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategories((prev) => {
+      // If category already exists, remove it
+      if (prev.includes(category)) {
+        return prev.filter((c) => c !== category);
+      }
+
+      // Otherwise, add it
+      return [...prev, category];
+    });
+  };
+  const handleLocationChange = (location) => {
+    setselectedLocations((prev) => {
+      if (prev.includes(location)) {
+        return prev.filter((c) => c !== location);
+      }
+
+      return [...prev, location];
+    });
+  };
+  useEffect(() => {
+    const matchesCategory = (job) =>
+      selectdCategories.length === 0 ||
+      selectdCategories.includes(job.category); // ✅ should use job
+
+    const matchesLocation = (job) =>
+      selectedLocations.length === 0 ||
+      selectedLocations.includes(job.location); // ✅ should use job
+
+    const matchesTitle = (job) =>
+      searchFilter.title === "" ||
+      job.title.toLowerCase().includes(searchFilter.title.toLowerCase());
+
+    const matchesSearchLocation = (job) =>
+      searchFilter.location === "" ||
+      job.location.toLowerCase().includes(searchFilter.location.toLowerCase());
+
+    const newFilteredJobs = jobs
+      .slice()
+      .reverse()
+      .filter(
+        (job) =>
+          matchesCategory(job) &&
+          matchesLocation(job) &&
+          matchesTitle(job) &&
+          matchesSearchLocation(job)
+      );
+
+    seFilteredJobs(newFilteredJobs);
+    setCurrentPage(1);
+  }, [jobs, selectdCategories, selectedLocations, searchFilter]);
+
   return (
     <div className="container 2xl:px-20 mx-auto flex flex-col lg:flex-row gap-8 py-8">
       {/* Sidebar */}
@@ -62,7 +118,12 @@ const JobListing = () => {
           <ul className="space-y-4 text-gray-600">
             {JobCategories.map((category, index) => (
               <li className="flex gap-3 items-center" key={index}>
-                <input className="scale-125" type="checkbox" />
+                <input
+                  className="scale-125"
+                  type="checkbox"
+                  onChange={() => handleCategoryChange(category)}
+                  checked={selectdCategories.includes(category)}
+                />
                 {category}
               </li>
             ))}
@@ -75,7 +136,12 @@ const JobListing = () => {
           <ul className="space-y-4 text-gray-600">
             {JobLocations.map((location, index) => (
               <li className="flex gap-3 items-center" key={index}>
-                <input className="scale-125" type="checkbox" />
+                <input
+                  className="scale-125"
+                  type="checkbox"
+                  onChange={() => handleLocationChange(location)}
+                  checked={selectedLocations.includes(location)}
+                />
                 {location}
               </li>
             ))}
@@ -91,7 +157,7 @@ const JobListing = () => {
         <p className="mb-8">Get your desired job from top companies</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {/* Job cards go here */}
-          {jobs
+          {filteredJobs
             .slice((currentPage - 1) * 6, currentPage * 6)
             .map((job, index) => (
               <JobCard key={index} job={job} />
@@ -100,7 +166,7 @@ const JobListing = () => {
 
         {/* Pagination */}
 
-        {jobs.length > 0 && (
+        {filteredJobs.length > 0 && (
           <div className="flex items-center justify-center gap-2 mt-10">
             {/* Previous Arrow */}
             <button
@@ -114,7 +180,7 @@ const JobListing = () => {
             </button>
 
             {/* Page Numbers */}
-            {Array.from({ length: Math.ceil(jobs.length / 6) }).map(
+            {Array.from({ length: Math.ceil(filteredJobs.length / 6) }).map(
               (_, index) => (
                 <button
                   key={index}
@@ -134,12 +200,12 @@ const JobListing = () => {
             <button
               onClick={() =>
                 setCurrentPage((prev) =>
-                  Math.min(prev + 1, Math.ceil(jobs.length / 6))
+                  Math.min(prev + 1, Math.ceil(filteredJobs.length / 6))
                 )
               }
               disabled={currentPage === Math.ceil(jobs.length / 6)}
               className={`p-1 rounded ${
-                currentPage === Math.ceil(jobs.length / 6)
+                currentPage === Math.ceil(filteredJobs.length / 6)
                   ? "opacity-40 cursor-not-allowed"
                   : ""
               }`}

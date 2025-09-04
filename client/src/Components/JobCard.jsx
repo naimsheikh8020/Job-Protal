@@ -2,6 +2,7 @@ import React from 'react'
 import { assets } from '../assets/assets'
 
 const JobCard = ({job}) => {
+
   return (
     <div className='border p-6 shadow rounded border-gray-200'>
         <div className='flex justify-between items-center'>
