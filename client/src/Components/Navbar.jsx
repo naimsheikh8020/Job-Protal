@@ -7,7 +7,7 @@ const Navbar = () => {
   return (
     <div className="shadow py-4">
       <div className="container px-4 2xl:px-10 mx-auto flex justify-between items-center">
-        <img src={assets.logo} alt="logo" />
+        <Link to={'/'}><img  className="cursor-pointer" src={assets.logo} alt="logo" /></Link>
         {user ? (
           <div className="flex items-center gap-3">
             <Link to={'/applications'}>Applied Job</Link>
