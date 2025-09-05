@@ -14,7 +14,7 @@ const Hero = () => {
     setIsSearched(true);
   };
   return (
-    <div className="container 2xl:px-20 mx-auto my-10">
+    <div className="container 2xl:px-10 mx-auto my-10">
       <div className="bg-gradient-to-r from-purple-800 to-purple-900 text-white py-16 text-center mx-2 rounded-xl">
         <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-4">
           Over 10,000+ jobs to apply
