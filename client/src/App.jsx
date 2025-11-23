@@ -11,19 +11,19 @@ import Managejobs from "./pages/Managejobs";
 import ViewApplication from "./pages/ViewApplication";
 
 function App() {
-  const {showRecruiterLogin} = useContext(AppContext)
+  const { showRecruiterLogin } = useContext(AppContext);
 
   return (
     <>
-    {showRecruiterLogin && <RecruiterLogin/>}
+      {showRecruiterLogin && <RecruiterLogin />}
       <Routes>
-        <Route path="/" element={<Home/>} />
-        <Route path="/apply-job/:id" element={<Applyjob/>} />
-        <Route path="/applications" element={<Application/>} />
-        <Route path="/dashboard" element={<Dashboard/>}>
-         <Route path="add-job" element={<Addjobs/>}/>
-         <Route path="manage-job" element={<Managejobs/>}/>
-         <Route path="view-applications" element={<ViewApplication/>}/>
+        <Route path="/" element={<Home />} />
+        <Route path="/apply-job/:id" element={<Applyjob />} />
+        <Route path="/applications" element={<Application />} />
+        <Route path="/dashboard" element={<Dashboard />}>
+          <Route path="add-job" element={<Addjobs />} />
+          <Route path="manage-job" element={<Managejobs />} />
+          <Route path="view-applications" element={<ViewApplication />} />
         </Route>
       </Routes>
     </>
