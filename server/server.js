@@ -17,9 +17,7 @@ app.use(express.json());
 app.get('/',(req, res)=>{
     res.send('Job Portal Server is Running')
 })
-app.get('/debug-sentry', function mainHandler(req, res) {
-    throw new Error("My first Sentry error!");
-  });
+
 
 
 //connect to Database
